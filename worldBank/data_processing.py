@@ -45,5 +45,52 @@ class DataProcessing:
 
         return df_cleaned
 
+    
+
+    '''
+    def drop_highly_correlated(self, correlation_threshold=0.8, df_serise=None):
+        """
+        Drops one column from each pair of highly correlated columns by keeping the one with lower missing values.
+
+        :param correlation_threshold: float, threshold above which two columns are considered highly correlated (default: 0.8)
+        :param df_serise: dataset with cleaned missing values
+        :return: Cleaned DataFrame with the highly correlated columns dropped.
+        """
+
+        missing_percentage_series = df_serise.isnull().mean() * 100
+
+        # Select only numerical columns since we are computing correlation
+        numeric_data = df_serise.select_dtypes(include=['number'])
+
+        # Compute Corr matrix
+        corr_matrix = numeric_data.corr().abs()
+
+        #print(corr_matrix)
+
+        # We'll use a set to collect the names of columns to drop
+        cols_to_drop = set()
+
+        # Loop through the upper triangle of the correlation matrix to check each pair
+        for i in range(len(corr_matrix.columns)):
+            for j in range(i + 1, len(corr_matrix.columns)):
+                col1 = corr_matrix.columns[i]
+                col2 = corr_matrix.columns[j]
+                if corr_matrix.iloc[i, j] >= correlation_threshold:
+                    print(f"Pair ({col1}, {col2}) has correlation: {corr_matrix.iloc[i, j]}")
+                    # If both columns are still available, decide which one to drop
+                    # Choose the column with the higher missing percentage
+                    if missing_percentage_series[col1] > missing_percentage_series[col2]:
+                        cols_to_drop.add(col1)
+                    else:
+                        cols_to_drop.add(col2)
+
+        print("Columns dropped due to high correlation:", list(cols_to_drop))
+
+        # Drop the selected columns from the data
+        df_cleaned = df_serise.drop(columns=list(cols_to_drop))
+
+        return df_cleaned
+        '''
+
 
 
